@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title style="background-color: #6bb4d6; color: white">Gold Prospecting in WA</title>
+    <style>
+        /* Navigation bar styles */
+        nav {
+            background-color: #2f4858;
+            overflow: hidden;
+        }
+
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            background-color: #6bb4d6;
+            color: white;
+            transition: background-color 1s ease;
+        }
+
+        nav a.active {
+            background-color: orange;
+            color: white;
+        }
+
+        /* Page header styles */
+        h1 {
+            background-color: #6bb4d6;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: #2f4858;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* Content area styles */
+        #content {
+            display: flex;
+            height: calc(95vh - 150px); 
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        /* Left side text area styles */
+        #text-area {
+            width: 15%;
+            background-color: lightgrey;
+            padding: 20px;
+            overflow: auto; 
+        }
+
+        /* Right side map and widgets styles */
+        #map-container {
+            width: 85%;
+            position: relative;
+        }
+
+		/* Legend styles */
+        #legend {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: white;
+            padding: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 1);
+            font-size: 10px;
+			z-index: 1; 
+        }
+
+		/* Search bar styles */
+        #search-input {
+            width: 300px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #search-button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+		
+        /* Reset button styles */
+        #reset-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        /* Layer button group styles */
+        #layer-button-group {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: white;
+            padding: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 1);
+            font-size: 12px;
+        }
+
+        #layer-button-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+
+       <link rel="stylesheet" href="https://js.arcgis.com/4.26/esri/themes/light/main.css">
+</head>
+<body>
+<h1 style="text-align: left;">Gold Prospecting in Western Australia</h1>
+<nav>
+    <a href="http://157.245.201.158/~Barley/webapp/Index.html">Main Page</a>
+	<a href="http://157.245.201.158/~Barley/webapp/ProspectingOverview.html">Prospecting Overview</a>
+	<a href="http://157.245.201.158/~Barley/webapp/Map.html">Map</a>
+	<a href="http://157.245.201.158/~Barley/webapp/KeyLocations.html" class="active">Key Locations</a>
+</nav>
+<div id="content">
+    <!-- Left side -->
+    <div id="text-area">
+        <h2>Areas Of Interest</h2>
+        <p>
+            The following areas listed, historically have been identified as some good prospecting locations found around the Kalgoorlie-Boulder area. Use the search bar in the top right hand section of the map window to explore these spots:
+        </p>
+		<p>
+            - Lake Lapage
+        </p>
+		<p>
+            - Carbine
+		</p>
+		<p>
+            - Broad Arrow	
+        </p>
+		<p>
+            - Gordon's Dam	
+        </p>
+		<p>
+            - Mulgabbie	
+        </p>
+		<p>
+            - Kurnalpi
+        </p>
+        <p>
+			To start gold prospecting, you are required to hold a Miner's Right. Additionally, it is also important to understand where you can and cannot prospect such as Heritage sites and Aboriginal land. 
+        </p>
+		<p>
+			For more information on this, you can visit the your relevant Department of Mines websites. Happy prospecting!
+		</p>
+    </div>
+
+    <!-- Right side -->
+    <div id="map-container">
+       
+        <div id="map"></div>
+    
+        <button id="reset-button">Reset Map</button>
+        
+        <div id="layer-button-group">
+            <label>
+                <input type="checkbox" name="layer" value="geology" checked> Geology
+            </label>
+            <label>
+                <input type="checkbox" name="layer" value="gold"> Industry and Mining
+            </label>
+            <label>
+                <input type="checkbox" name="layer" value="structural"> Linear Structures
+            </label>
+        </div>
+
+        <div id="legend"></div>
+    </div>
+</div>
+
+
+<footer>
+    Created by Andrew Barley | Last updated: 17/05/2023
+</footer>
+
+<!-- JavaScript code -->
+<script src="https://js.arcgis.com/4.26/"></script>
+<script>
+    require(["esri/Map", "esri/views/MapView", "esri/widgets/Legend", "esri/widgets/Search", "esri/widgets/ScaleBar", "esri/layers/MapImageLayer"], function(Map, MapView, Legend, Search, ScaleBar, MapImageLayer) {
+		var map = new Map({
+            basemap: "satellite" 
+        });
+
+       
+        var mapView = new MapView({
+            container: "map-container",
+            map: map,
+            zoom: 12, 
+            center: [121.4689, -30.7500] 
+        });
+
+        
+        var geologyServiceLayer = new MapImageLayer({
+            url: "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Geology_and_Soils_Map/MapServer",
+            sublayers: [
+                {
+                    id: 4 
+                }
+            ]
+        });
+
+       
+        var goldServiceLayer = new MapImageLayer({
+            url: "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Industry_and_Mining/MapServer",
+            sublayers: [
+                {
+                    id: 0 
+                }
+            ]
+        });
+
+        
+        var structuralServiceLayer = new MapImageLayer({
+            url: "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Geology_and_Soils_Map/MapServer",
+            sublayers: [
+                {
+                    id: 1 
+                }
+            ]
+        });
+
+        
+        function handleLayerSelection(event) {
+            var selectedLayers = Array.from(document.querySelectorAll('input[name="layer"]:checked')).map(function (checkbox) {
+                return checkbox.value;
+            });
+
+            
+            map.removeAll();
+
+            
+            selectedLayers.forEach(function (selectedLayer) {
+                if (selectedLayer === "geology") {
+                    map.add(geologyServiceLayer);
+                } else if (selectedLayer === "gold") {
+                    map.add(goldServiceLayer);
+                } else if (selectedLayer === "structural") {
+                    map.add(structuralServiceLayer);
+                }
+            });
+        }
+
+        
+        var layerCheckboxes = document.getElementsByName("layer");
+        layerCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", handleLayerSelection);
+        });
+
+        
+        var legend = new Legend({
+            view: mapView,
+            container: "legend"
+        });
+
+        
+        mapView.ui.add(legend, {
+            position: "bottom-right"
+        });
+
+        
+        var searchWidget = new Search({
+            view: mapView
+        });
+
+        
+        mapView.ui.add(searchWidget, {
+            position: "top-right"
+        });
+
+        
+        var scaleBar = new ScaleBar({
+            view: mapView,
+            unit: "metric" 
+        });
+
+        
+        mapView.ui.add(scaleBar, "bottom-left");
+
+        
+        var resetButton = document.getElementById("reset-button");
+        resetButton.addEventListener("click", function () {
+            mapView.goTo({
+                center: [121.4689, -30.7500],
+                zoom: 12
+            });
+        });
+
+        handleLayerSelection();
+    });
+</script>
+</body>
+</html>

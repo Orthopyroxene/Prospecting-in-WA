@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title style="background-color: #6bb4d6; color: white">Gold Prospecting in WA</title>
+    <style>
+        /* Navigation bar styles */
+        nav {
+            background-color: #2f4858;
+            overflow: hidden;
+        }
+
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            background-color: #6bb4d6;
+            color: white;
+            transition: background-color 1s ease;
+        }
+
+        nav a.active {
+            background-color: orange;
+            color: white;
+        }
+
+        /* Page header styles */
+        h1 {
+            background-color: #6bb4d6;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: #2f4858;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+		 /* Content area styles */
+		.content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+		}
+
+		.text-box {
+        width: 50%;
+		background-color: lightgrey;
+		padding: 20px;
+		}
+
+		.image-box {
+        width: 50%;
+		}
+
+		.image-box img {
+        max-width: 100%;
+       }
+       
+    </style>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.26/esri/themes/light/main.css">
+</head>
+<body>
+<h1 style="text-align: left;">Gold Prospecting in Western Australia</h1>
+<nav>
+    <a href="http://157.245.201.158/~Barley/webapp/Index.html">Main Page</a>
+	<a href="http://157.245.201.158/~Barley/webapp/ProspectingOverview.html" class="active">Prospecting Overview</a>
+	<a href="http://157.245.201.158/~Barley/webapp/Map.html">Map</a>
+	<a href="http://157.245.201.158/~Barley/webapp/KeyLocations.html">Key Locations</a>
+
+</nav>
+    <div class="content">
+        <div class="text-box">
+			<h2>Introduction</h2>
+			<p>Western Australia is known for its rich geological history that spans more than 4 billion years. Over this time period, there have been many mineralisation events which resulted in world class deposits forming throughout Western Australia.</p>
+			<p>The most notable mineralisation was that of gold and nickel which occurred during an event 2.7 to 2.5 billion years ago. This event lead to the formation of what is currently known as the granitoid-greenstone terrains found around Kalgoorlie.</p>
+			<p>Seen in the images to the right, the three layers provided when used together can provide trends on where gold mineralisation can occur.</p>
+			<p>Structural geology plays a big part on gold mineralisation, in that event which occured between 2.7 and 2.5 billion years ago. </p>
+			<p>Gold is dispersed through the Earth's crust as a fluid, it is through structural events such as fractures, folding and faulting, that gold reacts and becomes a solid. This is why gold is typically found in cracks or fractures that have been infilled with quartz. </p>
+			<p>The linear structures layer provides all the structural events that have occured in Western Australia. As seen in the image, once you apply the Industry and Mining layer, precious metal (gold) will appear in clusters around the structural symbols.</p>
+			<p>This is because the Industry and Mining layer is composed of all the currrent historical data of were gold has been discovered or mined to this present date.</p>
+			<p>Finally if you add the geology layer to the map, you will notice that the gold symbols (yellow squares) are associated to the green and lavender coloured rock groups and not the salmon colour. Is it because the age of the salmon coloured unit doesn't match the mineralisation event?</p>
+			<p>The names of these units can be found in the legend, use the three layers to try find trends in gold locations around Kalgoorlie.  </p>
+			<h3>Prospecting</h3>
+			<p>As a prospector, this information can be helpful in identifying new prospecting sites. Found on the Key Locations page, all the current map information is provided over a satellite base map.</p>
+			<p>Use the basemap with the layers to evaluate a potential site, check for things like road access, vegetation density, water bodies, soil type and elevation. </p>
+			<p>Dependant on the type of prospecting you plan on doing, looking for river bodies or dried out river bed in proximity to known gold sites might be a good idea, as high energy water bodies are known to transport gold downstream from the source.</p>
+		</div>
+		<div class="image-box">
+			<img src="Figure2.png"/>
+		</div>
+	</div>
+<footer>
+    Created by Andrew Barley | Last updated: 17/05/2023
+</footer>
+</script>
+</body>
+</html>

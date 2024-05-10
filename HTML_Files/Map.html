@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title style="background-color: #6bb4d6; color: white">Gold Prospecting in WA</title>
+    <style>
+        /* Navigation bar styles */
+        nav {
+            background-color: #2f4858;
+            overflow: hidden;
+        }
+
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            background-color: #6bb4d6;
+            color: white;
+            transition: background-color 1s ease;
+        }
+
+        nav a.active {
+            background-color: orange;
+            color: white;
+        }
+
+        /* Page header styles */
+        h1 {
+            background-color: #6bb4d6;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: #2f4858;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* Content area styles */
+        #content {
+            width: 100%;
+            height: calc(95vh - 150px); 
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Legend styles */
+        #legend {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: white;
+            padding: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 1);
+            font-size: 10px;
+			z-index: 1; 
+        }
+
+        /* Search bar styles */
+        #search-input {
+            width: 300px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #search-button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Reset button styles */
+        #reset-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        /* Layer button group styles */
+        #layer-button-group {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: white;
+            padding: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 1);
+            font-size: 12px;
+        }
+
+        #layer-button-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.26/esri/themes/light/main.css">
+</head>
+<body>
+<h1 style="text-align: left;">Gold Prospecting in Western Australia</h1>
+<nav>
+    <a href="http://157.245.201.158/~Barley/webapp/Index.html">Main Page</a>
+	<a href="http://157.245.201.158/~Barley/webapp/ProspectingOverview.html">Prospecting Overview</a>
+	<a href="http://157.245.201.158/~Barley/webapp/Map.html" class="active">Map</a>
+	<a href="http://157.245.201.158/~Barley/webapp/KeyLocations.html">Key Locations</a>
+</nav>
+<div id="content" style="position: relative;">
+
+    <div id="map-container"></div>
+
+    <button id="reset-button">Reset Map</button>
+
+    <div id="layer-button-group">
+        <label>
+            <input type="checkbox" name="layer" value="geology" checked> Geology
+        </label>
+        <label>
+            <input type="checkbox" name="layer" value="gold"> Industry and Mining
+        </label>
+        <label>
+            <input type="checkbox" name="layer" value="structural"> Linear Structures
+        </label>
+    </div>
+
+    <div id="legend"></div>
+</div>
+
+
+<footer>
+    Created by Andrew Barley | Last updated: 17/05/2023
+</footer>
+
+
+<!-- JavaScript code -->
+<script src="https://js.arcgis.com/4.26/"></script>
+<script>
+    require(["esri/Map", "esri/views/MapView", "esri/widgets/Legend", "esri/widgets/Search", "esri/widgets/ScaleBar", "esri/layers/MapImageLayer"], function(Map, MapView, Legend, Search, ScaleBar, MapImageLayer) {
+        var map = new Map({
+            basemap: "terrain" 
+        });
+
+        
+        var mapView = new MapView({
+            container: "content", 
+            map: map,
+            zoom: 5, 
+            center: [122, -25] 
+        });
+
+        
+        var geologyServiceLayer = new MapImageLayer({
+            url: "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Geology_and_Soils_Map/MapServer",
+            sublayers: [
+                {
+                    id: 4 
+                }
+            ]
+        });
+
+        
+        var goldServiceLayer = new MapImageLayer({
+            url: "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Industry_and_Mining/MapServer",
+            sublayers: [
+                {
+                    id: 0 
+                }
+            ]
+        });
+
+        
+        var structuralServiceLayer = new MapImageLayer({
+            url: "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Geology_and_Soils_Map/MapServer",
+            sublayers: [
+                {
+                    id: 1 
+                }
+            ]
+        });
+
+        
+        map.add(geologyServiceLayer);
+
+        
+        function handleLayerSelection(event) {
+            var selectedLayers = Array.from(document.querySelectorAll('input[name="layer"]:checked')).map(function (checkbox) {
+                return checkbox.value;
+            });
+
+            
+            map.removeAll();
+
+            
+            selectedLayers.forEach(function (selectedLayer) {
+                if (selectedLayer === "geology") {
+                    map.add(geologyServiceLayer);
+                } else if (selectedLayer === "gold") {
+                    map.add(goldServiceLayer);
+                } else if (selectedLayer === "structural") {
+                    map.add(structuralServiceLayer);
+                }
+            });
+        }
+
+        
+        var layerCheckboxes = document.getElementsByName("layer");
+        layerCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", handleLayerSelection);
+        });
+
+        
+        var scaleBar = new ScaleBar({
+            view: mapView,
+            unit: "metric" 
+        });
+        mapView.ui.add(scaleBar, "bottom-left");
+
+        
+        var resetButton = document.getElementById("reset-button");
+        resetButton.addEventListener("click", function () {
+            mapView.goTo({
+                center: [122, -25],
+                zoom: 5
+            });
+        });
+
+        
+        var searchWidget = new Search({
+            view: mapView
+        });
+
+        
+        mapView.ui.add(searchWidget, {
+            position: "top-right"
+        });
+
+        
+        var legend = new Legend({
+            view: mapView,
+            container: "legend"
+        });
+
+        
+        mapView.ui.add(legend, {
+            position: "bottom-right"
+        });
+    });
+</script>
+</body>
+</html>
